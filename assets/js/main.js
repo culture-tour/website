@@ -16,13 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize Modal
     const modalControls = setupModal(modal, modalBody, closeBtn);
 
-    // Load Settings
+    // Load Settings first, then load data
     fetchSettings().then(settings => {
         applySiteSettings(settings);
-    });
 
-    // Load Filters
-    fetchFilters().then(filters => {
+        // Load Filters after settings
+        return fetchFilters();
+    }).then(filters => {
         renderFilterButtons(filters, filterBtnsContainer);
 
         // Attach event listeners to filter dropdowns
@@ -30,23 +30,22 @@ document.addEventListener('DOMContentLoaded', () => {
         filterSelects.forEach(select => {
             select.addEventListener('change', handleFilter);
         });
-    });
 
-    // Load Data
-    fetchActivities()
-        .then(data => {
-            allActivities = data;
-            renderActivities(allActivities, activityList, (id) => {
-                const activity = allActivities.find(a => a.id === id);
-                if (activity) {
-                    modalControls.show(activity);
-                }
-            });
-        })
-        .catch(error => {
-            const errorText = window.siteSettings?.error_text || '無法載入活動。請稍後再試。';
-            activityList.innerHTML = `<p class="error">${errorText}</p>`;
+        // Load Activities after settings and filters
+        return fetchActivities();
+    }).then(data => {
+        allActivities = data;
+        renderActivities(allActivities, activityList, (id) => {
+            const activity = allActivities.find(a => a.id === id);
+            if (activity) {
+                modalControls.show(activity);
+            }
         });
+    }).catch(error => {
+        console.error('Error during initialization:', error);
+        const errorText = window.siteSettings?.error_text || '無法載入活動。請稍後再試。';
+        activityList.innerHTML = `<p class="error">${errorText}</p>`;
+    });
 
     // Filter Logic
     function handleFilter() {

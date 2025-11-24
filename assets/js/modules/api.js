@@ -1,81 +1,79 @@
-// URLs will be loaded from settings
-let SHEET_URLS = {
-    settings: 'YOUR_GOOGLE_SHEET_SETTINGS_URL_HERE',
-    filters: 'YOUR_GOOGLE_SHEET_FILTERS_URL_HERE',
-    activities: 'YOUR_GOOGLE_SHEET_ACTIVITIES_URL_HERE'
+// Hardcoded Google Sheets URL - the single source of truth
+const GOOGLE_SHEET_ID = '2PACX-1vQPOaFAfGiupp_lkfD6RfR7PZQ948cKodFUeOQyVTe1hBCksxtwIfThoKwREvL-M1D-nIXvtMigS7Ql';
+
+// Sheet GIDs
+const SHEET_GIDS = {
+    settings: 0,
+    filters: 1240024483,
+    activities: 344115867
 };
 
-// Function to update URLs from settings
-export function updateSheetURLs(settings) {
-    if (settings.sheet_filters_url) SHEET_URLS.filters = settings.sheet_filters_url;
-    if (settings.sheet_activities_url) SHEET_URLS.activities = settings.sheet_activities_url;
-}
+// Build sheet URLs
+const SHEET_URLS = {
+    settings: `https://docs.google.com/spreadsheets/d/e/${GOOGLE_SHEET_ID}/pub?gid=${SHEET_GIDS.settings}&single=true&output=csv`,
+    filters: `https://docs.google.com/spreadsheets/d/e/${GOOGLE_SHEET_ID}/pub?gid=${SHEET_GIDS.filters}&single=true&output=csv`,
+    activities: `https://docs.google.com/spreadsheets/d/e/${GOOGLE_SHEET_ID}/pub?gid=${SHEET_GIDS.activities}&single=true&output=csv`
+};
+
+// Hardcoded field mapping (Chinese to English)
+const FIELD_MAPPING = {
+    '標題': 'title',
+    '簡介': 'description',
+    '完整介紹': 'fullDescription',
+    '日期': 'date',
+    '地點': 'location',
+    '圖片': 'image',
+    '標籤': 'tags',
+    '價格': 'price',
+    '適合年齡': 'age',
+    '時長': 'duration',
+    '導覽類型': 'tour_type',
+    '環境': 'environment'
+};
+
+// Hardcoded site settings
+const SITE_SETTINGS = {
+    site_title: '文化探索',
+    page_title: '歷史文化導覽',
+    hero_title: '探索歷史',
+    hero_subtitle: '透過我們精心策劃的導覽，沉浸在歷史與文化之中。',
+    cta_button: '探索活動',
+    search_placeholder: '搜尋導覽活動...',
+    filter_all: '全部',
+    loading_text: '載入活動中...',
+    no_results: '找不到符合您條件的活動。',
+    error_text: '無法載入活動。請稍後再試。',
+    footer_text: '© 2024 文化探索. All rights reserved.',
+    modal_date_label: '日期',
+    modal_location_label: '地點',
+    modal_price_label: '價格',
+    modal_book_button: '立即預訂',
+    card_details_button: '查看詳情',
+    field_mapping: FIELD_MAPPING
+};
 
 export async function fetchSettings() {
-    // Always try local settings first to get URLs
-    const localSettings = await fetchLocalSettings();
-
-    // Update URLs from local settings
-    updateSheetURLs(localSettings);
-
-    // If settings URL is configured, fetch from Google Sheets
-    if (SHEET_URLS.settings !== 'YOUR_GOOGLE_SHEET_SETTINGS_URL_HERE') {
-        try {
-            const response = await fetch(SHEET_URLS.settings);
-            if (!response.ok) throw new Error('Network response was not ok');
-            const csvText = await response.text();
-            const rows = parseCSV(csvText);
-            const settings = {};
-            rows.forEach(row => {
-                if (row.key && row.value) {
-                    settings[row.key] = row.value;
-                }
-            });
-            // Update URLs again from remote settings
-            updateSheetURLs(settings);
-            return settings;
-        } catch (error) {
-            console.error('Error loading Google Sheet settings:', error);
-            return localSettings;
-        }
-    }
-
-    return localSettings;
-}
-
-async function fetchLocalSettings() {
     try {
-        const response = await fetch('data/settings.csv');
+        const response = await fetch(SHEET_URLS.settings);
         if (!response.ok) throw new Error('Network response was not ok');
         const csvText = await response.text();
         const rows = parseCSVForSettings(csvText);
-        const settings = {};
-        const fieldMapping = {};
+        const settings = { ...SITE_SETTINGS }; // Start with hardcoded defaults
 
         rows.forEach(row => {
-            if (row.key && row.value) {
-                if (row.group === 'field_mapping') {
-                    // Store field mapping separately
-                    fieldMapping[row.key] = row.value;
-                } else {
-                    settings[row.key] = row.value;
-                }
+            if (row.key && row.value && row.group !== 'field_mapping' && row.group !== 'config') {
+                settings[row.key] = row.value;
             }
         });
 
-        // Add field mapping to settings
-        if (Object.keys(fieldMapping).length > 0) {
-            settings.field_mapping = fieldMapping;
-        }
-
         return settings;
     } catch (error) {
-        console.error('Error loading local settings:', error);
-        return {};
+        console.warn('Error loading Google Sheet settings, using defaults:', error);
+        return SITE_SETTINGS;
     }
 }
 
-// Simple CSV parser for settings (before main parseCSV is available)
+// Simple CSV parser for settings
 function parseCSVForSettings(csvText) {
     const lines = csvText.trim().split(/\r?\n/);
     if (lines.length < 2) return [];
@@ -95,20 +93,6 @@ function parseCSVForSettings(csvText) {
 }
 
 export async function fetchFilters() {
-    // Fallback to local CSV if URL is not set
-    if (SHEET_URLS.filters === 'YOUR_GOOGLE_SHEET_FILTERS_URL_HERE') {
-        console.warn('Google Sheet Filters URL not set. Falling back to local CSV.');
-        try {
-            const response = await fetch('data/filters.csv');
-            if (!response.ok) throw new Error('Network response was not ok');
-            const csvText = await response.text();
-            return parseCSV(csvText);
-        } catch (error) {
-            console.error('Error loading local filters:', error);
-            return [];
-        }
-    }
-
     try {
         const response = await fetch(SHEET_URLS.filters);
         if (!response.ok) throw new Error('Network response was not ok');
@@ -121,19 +105,6 @@ export async function fetchFilters() {
 }
 
 export async function fetchActivities() {
-    // Fallback to local JSON if URL is not set
-    if (SHEET_URLS.activities === 'YOUR_GOOGLE_SHEET_ACTIVITIES_URL_HERE') {
-        console.warn('Google Sheet URL not set. Falling back to local JSON.');
-        try {
-            const response = await fetch('data/activities.json');
-            if (!response.ok) throw new Error('Network response was not ok');
-            return await response.json();
-        } catch (error) {
-            console.error('Error loading local data:', error);
-            throw error;
-        }
-    }
-
     try {
         const response = await fetch(SHEET_URLS.activities);
         if (!response.ok) {
@@ -153,17 +124,10 @@ function parseCSV(csvText) {
 
     let headers = parseCSVLine(lines[0]).map(h => h.trim());
 
-    // Apply field mapping if available (from settings)
-    if (window.siteSettings && window.siteSettings.field_mapping) {
-        const mapping = window.siteSettings.field_mapping;
-        headers = headers.map(header => {
-            // If there's a mapping for this Chinese header, use the English field name
-            return mapping[header] || header.toLowerCase();
-        });
-    } else {
-        // Fallback: just lowercase the headers
-        headers = headers.map(h => h.toLowerCase());
-    }
+    // Apply field mapping
+    headers = headers.map(header => {
+        return FIELD_MAPPING[header] || header.toLowerCase();
+    });
 
     const results = [];
 
