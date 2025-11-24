@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歷史文化導覽</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@400;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">文化探索</div>
+            <nav>
+                <ul>
+                    <li><a href="#" class="active">首頁</a></li>
+                    <li><a href="#activity-list">導覽</a></li>
+                    <li><a href="#">關於我們</a></li>
+                    <li><a href="#">聯絡我們</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section id="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>探索歷史</h1>
+            <p>透過我們精心策劃的導覽，沉浸在歷史與文化之中。</p>
+            <a href="#activity-list" class="btn primary-btn">探索活動</a>
+        </div>
+    </section>
+
+    <main class="container">
+        <section id="filters">
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Search tours...">
+            </div>
+            <div class="category-filters">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="History">History</button>
+                <button class="filter-btn" data-category="Culture">Culture</button>
+                <button class="filter-btn" data-category="Walking">Walking</button>
+                <button class="filter-btn" data-category="Workshop">Workshop</button>
+            </div>
+        </section>
+
+        <section id="activity-list">
+            <!-- Activities will be injected here by JS -->
+            <div class="loading">Loading activities...</div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2023 CultureQuest. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div id="modal-body">
+                <!-- Modal content injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
