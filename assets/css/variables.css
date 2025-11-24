@@ -1,0 +1,14 @@
+:root {
+    --primary-color: #8D6E63;
+    /* Earthy Brown */
+    --secondary-color: #D7CCC8;
+    /* Light Beige */
+    --accent-color: #5D4037;
+    /* Dark Brown */
+    --text-color: #3E2723;
+    --bg-color: #F5F5F5;
+    --card-bg: #FFFFFF;
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Lato', sans-serif;
+    --transition: all 0.3s ease;
+}

@@ -6,7 +6,7 @@
     "fullDescription": "加入我們兩小時的舊城區徒步導覽。我們將參觀最古老的市場、城牆，並了解塑造這座城市的傳說。非常適合歷史愛好者和攝影迷。",
     "date": "2023-11-15",
     "location": "中央廣場",
-    "image": "images/old_town.png",
+    "image": "assets/images/old_town.png",
     "tags": [
       "歷史",
       "徒步",
@@ -21,7 +21,7 @@
     "fullDescription": "體驗前所未有的博物館之旅。包含特別燈光秀與古代文物導覽。附贈博物館咖啡廳飲品一杯。",
     "date": "2023-11-20",
     "location": "國立歷史博物館",
-    "image": "images/museum_night.png",
+    "image": "assets/images/museum_night.png",
     "tags": [
       "博物館",
       "室內",
@@ -36,7 +36,7 @@
     "fullDescription": "沉浸在傳統茶館的寧靜氛圍中。茶道大師將帶領您了解茶道的歷史與儀式。您將品嚐三種頂級茶葉。",
     "date": "2023-11-22",
     "location": "蓮花茶館",
-    "image": "images/tea_ceremony.png",
+    "image": "assets/images/tea_ceremony.png",
     "tags": [
       "文化",
       "室內",
@@ -51,7 +51,7 @@
     "fullDescription": "專注於城市著名寺廟建築風格與建造技術的導覽。了解雕刻背後的象徵意義與古人的結構智慧。",
     "date": "2023-11-25",
     "location": "東門寺",
-    "image": "images/temple_detail.png",
+    "image": "assets/images/temple_detail.png",
     "tags": [
       "建築",
       "歷史",
@@ -66,7 +66,7 @@
     "fullDescription": "拿起毛筆，學習傳統書法的基礎。我們的專家導師將教您如何書寫您的名字和簡單語句。提供所有材料，您可以將作品帶回家。",
     "date": "2023-11-28",
     "location": "藝術中心",
-    "image": "images/calligraphy.png",
+    "image": "assets/images/calligraphy.png",
     "tags": [
       "藝術",
       "文化",
@@ -81,7 +81,7 @@
     "fullDescription": "享受由在地藝術家帶來的傳統民謠之夜。音樂會將使用傳統樂器演奏講述地區歷史故事的歌曲。",
     "date": "2023-12-01",
     "location": "城市音樂廳",
-    "image": "images/folk_music.png",
+    "image": "assets/images/folk_music.png",
     "tags": [
       "音樂",
       "表演",
