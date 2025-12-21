@@ -28,12 +28,14 @@ const FIELD_MAPPING = {
     '適合年齡': 'age',
     '時長': 'duration',
     '導覽類型': 'tour_type',
-    '環境': 'environment'
+    '環境': 'environment',
+    '主辦單位': 'organizer',
+    '活動連結': 'link'
 };
 
 // Hardcoded site settings
 const SITE_SETTINGS = {
-    site_title: '文化探索',
+    site_title: '文話行者',
     page_title: '歷史文化導覽',
     hero_title: '探索歷史',
     hero_subtitle: '透過我們精心策劃的導覽，沉浸在歷史與文化之中。',
@@ -43,7 +45,7 @@ const SITE_SETTINGS = {
     loading_text: '載入活動中...',
     no_results: '找不到符合您條件的活動。',
     error_text: '無法載入活動。請稍後再試。',
-    footer_text: '© 2024 文化探索. All rights reserved.',
+    footer_text: '© 2024 文話行者. All rights reserved.',
     modal_date_label: '日期',
     modal_location_label: '地點',
     modal_price_label: '價格',
@@ -150,7 +152,7 @@ function parseCSV(csvText) {
                 } else if (header === 'image' || header === '圖片') {
                     // Handle image path
                     if (!value) {
-                        value = 'assets/images/default.png';
+                        value = 'assets/images/default.jpg';
                     } else if (!value.startsWith('http') && !value.startsWith('assets/')) {
                         // Assume it's a filename in assets/images/
                         value = `assets/images/${value}`;

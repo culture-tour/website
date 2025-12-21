@@ -124,72 +124,56 @@ export function renderActivities(activities, container, openModalCallback) {
     }
 
     activities.forEach(activity => {
-        const card = document.createElement('div');
-        card.className = 'activity-card';
-
-        const tagsHtml = activity.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+        const hasLink = activity.link && activity.link !== '#' && activity.link.trim() !== '';
+        const card = document.createElement(hasLink ? 'a' : 'div');
+        card.className = `activity-card ${hasLink ? '' : 'non-clickable'}`;
+        
+        if (hasLink) {
+            card.href = activity.link;
+            card.target = '_blank';
+        }
+        
+        const imageUrl = activity.image || 'assets/images/default.jpg';
 
         card.innerHTML = `
-            <div class="card-image">
-                <img src="${activity.image}" alt="${activity.title}" loading="lazy" onerror="this.onerror=null;this.src='assets/images/default.png';">
-            </div>
+            <div class="card-bg" style="background-image: url('${imageUrl}')"></div>
+            <div class="card-overlay"></div>
             <div class="card-content">
                 <h3>${activity.title}</h3>
                 <div class="card-meta">
-                    <span>📅 ${activity.date}</span>
                     <span>📍 ${activity.location}</span>
+                    ${activity.organizer ? `<span>🏢 ${activity.organizer}</span>` : ''}
                 </div>
                 <p class="card-desc">${activity.description}</p>
-                <div class="card-tags">
-                    ${tagsHtml}
-                </div>
-                <div class="card-footer">
-                    <span class="price">${activity.price}</span>
-                    <button class="details-btn" data-id="${activity.id}">${window.siteSettings?.card_details_button || '查看詳情'}</button>
-                </div>
             </div>
         `;
         container.appendChild(card);
     });
 
-    // Add event listeners to new buttons
-    container.querySelectorAll('.details-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const id = parseInt(e.target.dataset.id);
-            openModalCallback(id);
-        });
-    });
 }
 
 export function setupModal(modal, modalBody, closeBtn) {
     function show(activity) {
-        const tagsHtml = activity.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
         const settings = window.siteSettings || {};
 
         modalBody.innerHTML = `
             <div class="modal-body-content">
-                <img src="${activity.image}" alt="${activity.title}" class="modal-image" onerror="this.onerror=null;this.src='assets/images/default.png';">
                 <div class="modal-details">
                     <h2>${activity.title}</h2>
                     <div class="modal-info-grid">
                         <div class="info-item">
-                            <strong>${settings.modal_date_label || '日期'}</strong>
-                            ${activity.date}
-                        </div>
-                        <div class="info-item">
                             <strong>${settings.modal_location_label || '地點'}</strong>
                             ${activity.location}
                         </div>
-                        <div class="info-item">
-                            <strong>${settings.modal_price_label || '價格'}</strong>
-                            ${activity.price}
-                        </div>
+                        ${activity.organizer ? `
+                            <div class="info-item">
+                                <strong>主辦單位</strong>
+                                ${activity.organizer}
+                            </div>
+                        ` : ''}
                     </div>
-                    <div class="card-tags" style="margin-bottom: 20px;">
-                        ${tagsHtml}
-                    </div>
-                    <p>${activity.fullDescription}</p>
-                    <button class="btn primary-btn" style="margin-top: 20px; width: 100%;">${settings.modal_book_button || '立即預訂'}</button>
+                    <p>${activity.description}</p>
+                    ${activity.link ? `<a href="${activity.link}" class="btn primary-btn" target="_blank" style="margin-top: 20px; width: 100%; display: block; text-align: center; text-decoration: none;">活動連結</a>` : ''}
                 </div>
             </div>
         `;

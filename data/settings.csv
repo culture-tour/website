@@ -29,3 +29,5 @@ field_mapping,適合年齡,age
 field_mapping,時長,duration
 field_mapping,導覽類型,tour_type
 field_mapping,環境,environment
+field_mapping,主辦單位,organizer
+field_mapping,活動連結,link
